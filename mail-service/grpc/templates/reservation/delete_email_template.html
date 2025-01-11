@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservation Cancellation Confirmed</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border: 1px solid #dddddd;
+      border-radius: 4px;
+      padding: 20px;
+      color: #333333;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 20px;
+      color: #333333;
+      margin: 0;
+    }
+    .content p {
+      margin: 10px 0;
+    }
+    .details {
+      margin: 20px 0;
+      padding: 10px;
+      background-color: #f7f7f7;
+      border: 1px solid #dddddd;
+      border-radius: 4px;
+    }
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #777777;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="email-container">
+  <div class="header">
+    <h1>Your Reservation Has Been Canceled</h1>
+  </div>
+  <div class="content">
+    <p>Dear {{.Name}},</p>
+    <p>We have successfully canceled your reservation as per your request. Below are the details of the canceled reservation:</p>
+    <div class="details">
+      <p><strong>Canceled Reservation Details:</strong></p>
+      <p>Date: {{.ReservationDate}}</p>
+      <p>Time: {{.TimeSlot}}</p>
+    </div>
+    <p>If this cancellation was made in error or if you wish to make another reservation, please contact us or visit our website.</p>
+  </div>
+  <div class="footer">
+    <p>This is an automated email. Please do not reply.</p>
+    <p>All rights reserved.</p>
+  </div>
+</div>
+</body>
+</html>

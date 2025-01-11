@@ -1,0 +1,3 @@
+*.sql linguist-detectable
+**/ui/* linguist-documentation
+*.js linguist-generated

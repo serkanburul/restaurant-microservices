@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS reservation;
+
+DROP TABLE IF EXISTS tables;
+
+DROP TABLE IF EXISTS time_slots;

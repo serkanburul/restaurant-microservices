@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package mail_service;
+
+option go_package = "/proto";
+
+message ReservationMail {
+  string to = 1;
+  string token = 2;
+  string type = 3;
+  string name = 4;
+  string reservationDate = 5;
+  string timeSlot = 6;
+}
+
+message SubscriptionMail {
+  repeated string to = 1;
+  string subject = 2;
+  string body = 3;
+}
+
+message SendReservationMailRequest {
+  ReservationMail reservationMailEntry = 1;
+}
+
+message SendSubscriptionMailRequest {
+  SubscriptionMail subscriptionMailEntry = 1;
+}
+
+message SendMailResponse {
+  bool error = 1;
+  string message = 2;
+}
+
+
+service MailService {
+  rpc SendReservationMail(SendReservationMailRequest) returns (SendMailResponse);
+  rpc SendSubscriptionMail(SendSubscriptionMailRequest) returns (SendMailResponse);
+}
