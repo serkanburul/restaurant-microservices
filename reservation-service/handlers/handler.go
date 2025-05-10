@@ -20,6 +20,15 @@ func NewHandler(service *service.Service) *Handler {
 	}
 }
 
+func (h *Handler) GetSlots(c echo.Context) error {
+	slots, err  := h.service.GetSlots()
+	if err != nil {
+		log.Println(err.Error())
+		return err
+	}
+	return c.JSON(http.StatusOK, slots)
+}
+
 func (h *Handler) CreateReservation(c echo.Context) error {
 	var req createReservationRequest
 	err := c.Bind(&req)

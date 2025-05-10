@@ -27,7 +27,7 @@ services:
       - ./content_service:/usr/src/app
     depends_on:
       mysql:
-        condition: service_healthy
+          condition: service_healthy
     restart: always
     environment:
       DEBUG: True
@@ -40,15 +40,11 @@ services:
   mail-service:
     build:
       context: mail-service
+    env_file:
+      - mail-service/.env
     ports:
       - "50051:50051"
     restart: always
-    environment:
-      SMTP_HOST:
-      SMTP_PORT:
-      SMTP_USER:
-      SMTP_PASS:
-      FROM_EMAIL:
 
   reservation-service:
     build:
@@ -88,8 +84,8 @@ services:
       - ./db-data/mysql/:/var/lib/mysql
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD" ]
-      interval: 5s
-      timeout: 5s
+      interval: 2s
+      timeout: 2s
       retries: 5
 
   postgres-reservation:

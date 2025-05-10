@@ -20,13 +20,29 @@ func NewService(db *db.DB) *Service {
 	}
 }
 
+func (s *Service) GetSlots() ([]string, error) {
+	ctx := context.Background()
+	slots, err  := s.db.ListTimeSlots(ctx)
+	if err != nil {
+		return nil, err
+	}
+	formattedSlots := make([]string, len(slots))
+	for i, slot := range slots {
+		formattedSlots[i] = slot.Format("15:04:05")
+		if err != nil {
+			return nil, err
+		}
+	}
+	return formattedSlots, nil
+}
+
 func (s *Service) CreateReservation(p CreatePayload) error {
 	ctx := context.Background()
 	parsedTime, err := time.Parse("15:04:05", p.TimeSlot)
 	if err != nil {
 		return err
 	}
-	log.Println(parsedTime)
+
 	slot, err := s.db.GetTimeSlot(ctx, parsedTime)
 	if err != nil {
 		log.Println("Error getting time slot: ", err.Error())

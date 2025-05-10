@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Food
-from .serializers import FoodSerializer
+from .models import Food, Category
+from .serializers import FoodSerializer, CategorySerializer
 
 class FoodListView(APIView):
     renderer_classes = [JSONRenderer]
@@ -15,6 +15,14 @@ class FoodListView(APIView):
             foods = Food.objects.all()
 
         serializer = FoodSerializer(foods, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class CategoryListView(APIView):
+    renderer_classes = [JSONRenderer]
+
+    def get(self, request):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class FeaturedFoodListView(APIView):

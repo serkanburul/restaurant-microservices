@@ -11,10 +11,6 @@ import { Clock } from "lucide-react";
 
 dayjs.locale('tr');
 
-const TIMESLOTS = [
-    "15:30:00", "16:45:00", "18:00:00", "19:15:00", "20:30:00", "21:45:00"
-];
-
 const CreateReservation = () => {
     const [formData, setFormData] = useState({
         name: '',
@@ -29,10 +25,10 @@ const CreateReservation = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [bookingsByTimeSlot, setBookingsByTimeSlot] = useState({});
     const [guests, setGuests] = useState('');
+    const [slots, setSlots] = useState([]);
 
     const hasTenOccurences = (array, timeSlot) => {
         const count = array.filter(item => item === timeSlot).length;
-        console.log(`Time slot ${timeSlot} has ${count} bookings`);
         return count >= 10;
     };
 
@@ -73,6 +69,24 @@ const CreateReservation = () => {
     };
 
     useEffect(() => {
+        const fetchSlots = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/reservation/slots');
+                if (response.ok) {
+                    const data = await response.json();
+                    setSlots(data);
+                } else {
+                    console.error('Failed to fetch slots');
+                }
+            } catch (error) {
+                console.error('Error fetching slots:', error);
+            }
+        };
+
+        fetchSlots();
+    }, []);
+
+    useEffect(() => {
         const fetchBookedTimeslots = async () => {
             if (!selectedDate || !guests || guests < 1) return;
 
@@ -97,10 +111,6 @@ const CreateReservation = () => {
                                 bookingsByTime[timeSlot] = [];
                             }
                             bookingsByTime[timeSlot].push(reservation["TableNo"]);
-                        });
-
-                        Object.entries(bookingsByTime).forEach(([slot, tables]) => {
-                            console.log(`Time slot ${slot} has tables booked:`, tables);
                         });
 
                         setBookedTimeslots(bookedSlots);
@@ -234,9 +244,8 @@ const CreateReservation = () => {
                                     onValueChange={(value) => setFormData({...formData, time_slot: value})}
                                     className="grid grid-cols-3 gap-2"
                                 >
-                                    {TIMESLOTS.map((time) => {
+                                    {slots.map((time) => {
                                         const isDisabled = hasTenOccurences(bookedTimeslots, time);
-                                        console.log(`Rendering time slot ${time}, disabled: ${isDisabled}`);
                                         return (
                                             <div key={time}>
                                                 <RadioGroupItem
