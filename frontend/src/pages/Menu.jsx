@@ -1,27 +1,41 @@
 import React, {useEffect, useState} from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { menuCategories } from '../data/menuItems';
 
 const Menu = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [menuItems, setMenuItems] = useState([]);
-
+    const [categories, setCategories] = useState([]);
+    
     useEffect(() => {
-        fetch(`http://localhost:8080/content/foods?category=${selectedCategory}`).then((response) => {
-            if (!response.ok) {
-                throw new Error("Failed to fetch foods: " + response.status)
-            }
-            return response.json();
-        })
+        fetch("http://localhost:8080/content/categories")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch categories: " + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const categoryNames = data.map(category => category.name);
+                setCategories(categoryNames);
+            })
+            .catch(error => console.log("Error fetching categories:", error));
+    }, []);
+    
+    useEffect(() => {
+        fetch(`http://localhost:8080/content/foods?category=${selectedCategory}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch foods: " + response.status);
+                }
+                return response.json();
+            })
             .then(data => setMenuItems(data))
-            .catch(error => console.log(error));
+            .catch(error => console.log("Error fetching menu items:", error));
     }, [selectedCategory]);
-
-
+    
     return (
         <div className="container mx-auto py-24">
             <h1 className="text-4xl font-bold text-center mb-8">Menu</h1>
-
             <div className="flex justify-center space-x-4 mb-8">
                 <button
                     onClick={() => setSelectedCategory('')}
@@ -33,7 +47,7 @@ const Menu = () => {
                 >
                     All
                 </button>
-                {menuCategories.map(category => (
+                {categories.map(category => (
                     <button
                         key={category}
                         onClick={() => setSelectedCategory(category)}
@@ -47,7 +61,6 @@ const Menu = () => {
                     </button>
                 ))}
             </div>
-
             <div className="grid md:grid-cols-3 gap-6">
                 {menuItems.map(item => (
                     <Card key={item.id}>

@@ -51,6 +51,9 @@ func main() {
 
 	// GET BY DATE AND CAPACITY
 	e.GET("/reservation/:date/:capacity", newHandler.GetReservationsByDateAndCapacity)
+	
+	// GET SLOTS
+	e.GET("/reservation/slots", newHandler.GetSlots)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
